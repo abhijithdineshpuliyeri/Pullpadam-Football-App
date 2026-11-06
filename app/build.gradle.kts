@@ -60,6 +60,14 @@ dependencies {
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.9.3")
 
+    // ViewModel & Coroutines
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+
+    // Google Gemini Generative AI SDK & Gson
+    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
+    implementation("com.google.code.gson:gson:2.11.0")
+
     // Debug tools
     debugImplementation("androidx.compose.ui:ui-tooling")
 

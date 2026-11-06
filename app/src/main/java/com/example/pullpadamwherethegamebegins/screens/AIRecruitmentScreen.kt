@@ -1,5 +1,11 @@
 package com.example.pullpadamwherethegamebegins.screens
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,11 +31,83 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.RoundRect
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
+// =============================================================
+// RECRUITER CARD ANIMATED GLOWING BORDER
+// =============================================================
+
+fun Modifier.aiRecruiterGlowingBorder(
+    cornerRadius: Dp = 23.dp,
+    borderWidth: Dp = 2.5.dp,
+    durationMs: Int = 3000
+): Modifier = composed {
+    val infiniteTransition = rememberInfiniteTransition(label = "recruiterGlowTransition")
+    val angle by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = durationMs, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "recruiterGlowAngle"
+    )
+
+    this.drawWithCache {
+        val cornerRadiusPx = cornerRadius.toPx()
+        val borderWidthPx = borderWidth.toPx()
+
+        val rect = Rect(
+            left = borderWidthPx / 2f,
+            top = borderWidthPx / 2f,
+            right = size.width - borderWidthPx / 2f,
+            bottom = size.height - borderWidthPx / 2f
+        )
+
+        val borderPath = Path().apply {
+            addRoundRect(RoundRect(rect, CornerRadius(cornerRadiusPx, cornerRadiusPx)))
+        }
+
+        val glowBrush = Brush.sweepGradient(
+            colors = listOf(
+                Color(0x1AB6FF3B),
+                Color(0x40B6FF3B),
+                Color(0xFFE2FF82),
+                Color(0xFFB6FF3B),
+                Color(0x30B6FF3B),
+                Color(0x05B6FF3B)
+            ),
+            center = Offset(size.width / 2f, size.height / 2f)
+        )
+
+        onDrawWithContent {
+            drawContent()
+            rotate(degrees = angle, pivot = Offset(size.width / 2f, size.height / 2f)) {
+                drawPath(
+                    path = borderPath,
+                    brush = glowBrush,
+                    style = Stroke(width = borderWidthPx, cap = StrokeCap.Round)
+                )
+            }
+        }
+    }
+}
 
 
 // =============================================================
@@ -160,12 +238,13 @@ fun AIRecruitmentScreen(
 
 
         // =====================================================
-        // MAIN STATUS CARD
+        // MAIN STATUS CARD (WITH ANIMATED GLOWING BORDER)
         // =====================================================
 
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .aiRecruiterGlowingBorder(cornerRadius = 23.dp)
                 .clip(
                     RoundedCornerShape(23.dp)
                 )

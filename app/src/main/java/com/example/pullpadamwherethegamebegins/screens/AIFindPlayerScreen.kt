@@ -164,12 +164,13 @@ fun AIFindPlayerScreen(
 
 
         // =====================================================
-        // PROFESSIONAL RECRUITMENT CARD
+        // PROFESSIONAL RECRUITMENT CARD (WITH ANIMATED GLOWING BORDER)
         // =====================================================
 
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .aiRecruiterGlowingBorder(cornerRadius = 18.dp)
                 .clip(
                     RoundedCornerShape(
                         18.dp

@@ -1,5 +1,12 @@
 package com.example.pullpadamwherethegamebegins.screens
 
+import android.graphics.PathMeasure
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,15 +34,115 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.asAndroidPath
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pullpadamwherethegamebegins.R
+
+// =============================================================
+// REVOLVING NEON BORDER MODIFIER FOR MAIN AI CARD
+// =============================================================
+
+fun Modifier.revolvingNeonBorderForAiCard(
+    cornerRadius: Dp = 22.dp,
+    borderWidth: Dp = 3.dp,
+    beamFraction: Float = 0.25f,
+    glowColor: Color = Color(0xFFB6FF3B),
+    coreColor: Color = Color(0xFFFFFFFF),
+    durationMs: Int = 2500
+): Modifier = composed {
+    val infiniteTransition = rememberInfiniteTransition(label = "aiCardRevolvingGlow")
+    val progress by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = durationMs, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "aiCardProgress"
+    )
+
+    this.drawWithCache {
+        val borderWidthPx = borderWidth.toPx()
+        val cornerRadiusPx = cornerRadius.toPx()
+
+        val rect = Rect(
+            left = borderWidthPx / 2f,
+            top = borderWidthPx / 2f,
+            right = size.width - borderWidthPx / 2f,
+            bottom = size.height - borderWidthPx / 2f
+        )
+
+        val composePath = Path().apply {
+            addRoundRect(RoundRect(rect, CornerRadius(cornerRadiusPx, cornerRadiusPx)))
+        }
+
+        val androidPath = composePath.asAndroidPath()
+        val pathMeasure = PathMeasure(androidPath, true)
+        val totalLength = pathMeasure.length
+
+        val beamLength = totalLength * beamFraction
+        val startDist = progress * totalLength
+        val endDist = startDist + beamLength
+
+        val beamPath = Path()
+        val androidBeamPath = beamPath.asAndroidPath()
+
+        if (endDist <= totalLength) {
+            pathMeasure.getSegment(startDist, endDist, androidBeamPath, true)
+        } else {
+            pathMeasure.getSegment(startDist, totalLength, androidBeamPath, true)
+            pathMeasure.getSegment(0f, endDist - totalLength, androidBeamPath, true)
+        }
+
+        onDrawWithContent {
+            drawContent()
+
+            // 1. Base dark green track outline
+            drawPath(
+                path = composePath,
+                color = Color(0x66B6FF3B),
+                style = Stroke(width = borderWidthPx)
+            )
+
+            // 2. Wide soft ambient glow around the traveling beam
+            drawPath(
+                path = beamPath,
+                color = glowColor.copy(alpha = 0.7f),
+                style = Stroke(width = borderWidthPx * 3.2f, cap = StrokeCap.Round)
+            )
+
+            // 3. Bright neon green traveling light beam
+            drawPath(
+                path = beamPath,
+                color = glowColor,
+                style = Stroke(width = borderWidthPx * 1.5f, cap = StrokeCap.Round)
+            )
+
+            // 4. Ultra-bright white core highlight
+            drawPath(
+                path = beamPath,
+                color = coreColor,
+                style = Stroke(width = borderWidthPx * 0.8f, cap = StrokeCap.Round)
+            )
+        }
+    }
+}
 
 
 // =============================================================
@@ -71,6 +178,7 @@ fun HomeScreen(
     onFindPlayers: () -> Unit = {},
     onBookTurf: () -> Unit = {},
     onMyBookings: () -> Unit = {},
+    onProfile: () -> Unit = {},
     onTurfSelected: (Turf) -> Unit = {}
 ) {
 
@@ -232,7 +340,7 @@ fun HomeScreen(
 
                     Text(
                         text =
-                            "Hello, Player 👋",
+                            "Hello, Player",
 
                         color =
                             Color.White,
@@ -262,19 +370,25 @@ fun HomeScreen(
                 }
 
 
-                // Notification
+                // Profile Button Top Right
 
                 Box(
                     modifier =
                         Modifier
-                            .size(44.dp)
+                            .height(40.dp)
                             .clip(
                                 RoundedCornerShape(
-                                    14.dp
+                                    12.dp
                                 )
                             )
                             .background(
                                 PullpadamCard
+                            )
+                            .clickable {
+                                onProfile()
+                            }
+                            .padding(
+                                horizontal = 12.dp
                             ),
 
                     contentAlignment =
@@ -283,10 +397,19 @@ fun HomeScreen(
 
                     Text(
                         text =
-                            "🔔",
+                            "PROFILE",
+
+                        color =
+                            PullpadamGreen,
 
                         fontSize =
-                            18.sp
+                            10.sp,
+
+                        fontWeight =
+                            FontWeight.ExtraBold,
+
+                        letterSpacing =
+                            0.5.sp
                     )
                 }
             }
@@ -469,13 +592,14 @@ fun HomeScreen(
 
 
             // =================================================
-            // AI CARD
+            // AI CARD (WITH VIVID REVOLVING NEON BORDER)
             // =================================================
 
             Box(
                 modifier =
                     Modifier
                         .fillMaxWidth()
+                        .revolvingNeonBorderForAiCard(cornerRadius = 22.dp)
                         .clip(
                             RoundedCornerShape(
                                 22.dp
@@ -900,7 +1024,10 @@ fun HomeScreen(
                 onAI,
 
             onMyBookings =
-                onMyBookings
+                onMyBookings,
+
+            onProfile =
+                onProfile
         )
     }
 }
@@ -1413,7 +1540,8 @@ private fun TopRatedCard(
 private fun HomeBottomNavigation(
     onBookTurf: () -> Unit,
     onAI: () -> Unit,
-    onMyBookings: () -> Unit
+    onMyBookings: () -> Unit,
+    onProfile: () -> Unit
 ) {
 
     Row(
@@ -1436,6 +1564,8 @@ private fun HomeBottomNavigation(
     ) {
 
 
+        // HOME
+
         BottomNavItem(
             icon =
                 "⌂",
@@ -1449,6 +1579,8 @@ private fun HomeBottomNavigation(
             onClick = {}
         )
 
+
+        // TURFS
 
         BottomNavItem(
             icon =
@@ -1465,6 +1597,8 @@ private fun HomeBottomNavigation(
         )
 
 
+        // AI
+
         BottomNavItem(
             icon =
                 "✦",
@@ -1479,6 +1613,8 @@ private fun HomeBottomNavigation(
                 onAI
         )
 
+
+        // BOOKINGS
 
         BottomNavItem(
             icon =
@@ -1516,7 +1652,7 @@ private fun BottomNavItem(
                     onClick()
                 }
                 .padding(
-                    horizontal = 16.dp,
+                    horizontal = 12.dp,
                     vertical = 2.dp
                 ),
 

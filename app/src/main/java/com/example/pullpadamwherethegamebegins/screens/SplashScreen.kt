@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -65,33 +66,24 @@ fun SplashScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                Text(
-                    text = "⚽",
-                    fontSize = 64.sp
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(
+                        id = com.example.pullpadamwherethegamebegins.R.drawable.pullpadam_logo
+                    ),
+                    contentDescription = "PULLPADAM Logo",
+                    modifier = Modifier.size(240.dp)
                 )
 
                 Spacer(
-                    modifier = Modifier.height(22.dp)
+                    modifier = Modifier.height(20.dp)
                 )
 
                 Text(
-                    text = "PULLPADAM",
+                    text = "WHERE THE GAME BEGINS",
                     color = PullpadamGreen,
-                    fontSize = 34.sp,
+                    fontSize = 13.sp,
                     fontWeight = FontWeight.ExtraBold,
                     letterSpacing = 3.sp
-                )
-
-                Spacer(
-                    modifier = Modifier.height(10.dp)
-                )
-
-                Text(
-                    text = "Where the Game Begins",
-                    color = Color.White,
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Medium,
-                    letterSpacing = 1.sp
                 )
             }
         }
