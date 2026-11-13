@@ -3,65 +3,11 @@
 [![Android Studio](https://img.shields.io/badge/Android%20Studio-2024.2+-brightgreen.svg)](https://developer.android.com/studio)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.0.21-blue.svg)](https://kotlinlang.org)
 [![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-Material%203-green.svg)](https://developer.android.com/jetpack/compose)
-[![Target SDK](https://img.shields.io/badge/Target%20SDK-37-orange.svg)](https://developer.android.com)
+[![API Level](https://img.shields.io/badge/Target%20SDK-37-orange.svg)](https://developer.android.com)
 
 **PULLPADAM** is a modern, premium dark-themed football turf booking, player discovery, and AI-driven matchmaking Android application developed using **Kotlin** and **Jetpack Compose** in Android Studio.
 
 Designed to make football more accessible, organized, and enjoyable for players, teams, and turf owners, PULLPADAM combines turf reservations, squad organization, player recruitment, and intelligent AI features into a single unified mobile platform under the vision: **"PULLPADAM – Where the Game Begins."**
-
----
-
-## 📱 Application Screenshots & User Interface Showcase
-
-| 1. Welcome & Branding | 2. Home Dashboard & Revolving AI Card | 3. Turf Discovery & Slot Selection | 4. AI Matchmakers Suite |
-| :-: | :-: | :-: | :-: |
-| *Splash Screen & Official Logo* | *Main AI Card with Revolving Light Beam* | *Nearby Turfs, Facilities & Slots* | *Compatibility Scoring (96% Match)* |
-
-| 5. AI Recruiter & Squad Organiser | 6. Universal Floating AI Chatbot | 7. Booking Confirmation | 8. Player Profile & Stats |
-| :-: | :-: | :-: | :-: |
-| *Status Card & Live Availability* | *Guided Step-by-Step Search Chips* | *Confirmed Reservation Receipt* | *Player Appearances, Goals & Win Rate* |
-
----
-
-## 🎥 Commercial Advertisements & AI Video Blueprint (60 Seconds)
-
-PULLPADAM includes a complete 60-second production video trailer divided into 6 precise 10-second scenes for promotional launch campaigns:
-
-### 🎬 60-Second Video Script & Scene Breakdown
-
-- **Scene 1 (0:00 - 0:10) – Brand Reveal & App Launch**:
-  - *Visual*: Dark stadium floodlights turning on. Sleek smartphone floating in 3D displaying the glowing neon-green PULLPADAM logo.
-  - *Voiceover*: *"Welcome to PULLPADAM — the ultimate football community platform for players, teams, and turf owners. Stop searching for players manually. Experience modern turf booking and AI-driven matchmaking in one single mobile app. Where the game begins."*
-
-- **Scene 2 (0:10 - 0:20) – Home Dashboard & Revolving AI Card**:
-  - *Visual*: Camera pans over the Home Screen. The main PULLPADAM AI Card has a vivid neon-green/white light continuously revolving around its border.
-  - *Voiceover*: *"Explore nearby football turfs, inspect venue amenities, prices, and available time slots. With our revolving AI engine card, discover personalized game recommendations crafted specifically for your playing style."*
-
-- **Scene 3 (0:20 - 0:30) – AI Matchmaking Suite**:
-  - *Visual*: Dynamic split screen of Find Game, Find Team, and Find Player showing match compatibility scores (96%, 92%, 88%).
-  - *Voiceover*: *"Playing alone? Find an open match looking for a player like you. Short on numbers? Connect with another incomplete team and merge your squads. Need a defender or striker? Recruit local players matched by position, location, and skill level."*
-
-- **Scene 4 (0:30 - 0:40) – AI Recruiter & Squad Organiser**:
-  - *Visual*: Showcase of the AI Recruiter status card with revolving light trail, toggling live player availability (`AVAILABLE ✓`), and starting XI lineup.
-  - *Voiceover*: *"Manage your team roster effortlessly. Toggle live player availability with a single tap, and let our AI Squad Assistant automatically divide your available roster into fair, balanced starting lineups."*
-
-- **Scene 5 (0:40 - 0:50) – Universal Floating AI Chatbot**:
-  - *Visual*: User drags the neon-green floating AI Assistant icon. The open chat window answers live questions about available slots in Kannur and Thana.
-  - *Voiceover*: *"Have questions? Drag and talk to our Universal AI Assistant from anywhere in the app. Ask about open evening slots, search defenders in your area, or request custom budget filters from ₹1,000 to ₹1,500."*
-
-- **Scene 6 (0:50 - 1:00) – Turf Booking & Grand Outro**:
-  - *Visual*: Montage of reservation confirmation, player stats report, and players celebrating on a synthetic pitch under night floodlights. Final logo text: **PULLPADAM – Where the Game Begins**.
-  - *Voiceover*: *"Lock your turf slot instantly, track your match appearances, goals, and win rates, and elevate your football experience. PULLPADAM — Where the Game Begins. Download the app today on Google Play!"*
-
----
-
-## 📄 Product Specifications & Documentation (PDF Specification)
-
-The technical architecture and AI engine design of PULLPADAM are fully documented in our technical specifications:
-
-- **Local Deterministic AI Engine (`LocalMatchEngine.kt`)**: Weighted scoring algorithms operating offline for compatibility calculations ($S_{\text{overall}} = 0.4 S_{\text{pos}} + 0.3 S_{\text{dist}} + 0.2 S_{\text{skill}} + 0.1 S_{\text{avail}}$).
-- **Google Gemini Generative AI SDK (`GeminiApiService.kt`)**: Fallback integration using `gemini-1.5-flash` with structured JSON response parsing.
-- **Native Render Graphics**: Custom Jetpack Compose `PathMeasure` revolving border modifier (`aiRecruiterGlowingBorder` & `revolvingNeonBorderForAiCard`).
 
 ---
 
@@ -195,5 +141,3 @@ Distributed under the MIT License. See `LICENSE` for details.
 
 **PULLPADAM – Where the Game Begins** ⚽
 Developed by **Abhijith Dinesh Puliyeri**
-
-
